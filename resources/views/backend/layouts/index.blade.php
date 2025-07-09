@@ -23,7 +23,7 @@
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
                                 <h1 class="fs-2hx fw-bold text-success me-2 lh-1">{{ $totalFaqs }}</h1>
-                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total FAQs</h4>
+                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total Kiosk</h4>
                             </div>
                             <div>
                                 <i class="bi bi-question-circle-fill display-4 text-success"></i>
@@ -36,7 +36,7 @@
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
                                 <h1 class="fs-2hx fw-bold text-info me-2 lh-1">{{ $totalDynamicPages }}</h1>
-                                <h4 class="fs-5 fw-semibold text-muted mt-2">Dynamic Pages</h4>
+                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total Frames</h4>
                             </div>
                             <div>
                                 <i class="bi bi-file-earmark-richtext-fill display-4 text-info"></i>
