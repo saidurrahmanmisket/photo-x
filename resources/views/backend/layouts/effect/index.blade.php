@@ -129,7 +129,7 @@
                 let url = '{{ route('admin.effects.destroy', ':id') }}';
                 let csrfToken = '{{ csrf_token() }}';
                 $.ajax({
-                    type: "POST",
+                    type: "DELETE",
                     url: url.replace(':id', id),
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
@@ -156,4 +156,3 @@
         </script>
     @endpush
 @endsection
-

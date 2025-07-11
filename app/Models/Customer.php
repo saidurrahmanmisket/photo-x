@@ -12,6 +12,8 @@ class Customer extends Model
     protected $fillable = [
         'name',
         'email',
+        'phone',
+        'address',
         'avatar',
         'agree_to_terms',
         'is_premium',
@@ -36,16 +38,16 @@ class Customer extends Model
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class, 'user_id');
+        return $this->hasMany(Booking::class, 'customer_id');
     }
 
     public function photos()
     {
-        return $this->hasMany(Photo::class, 'user_id');
+        return $this->hasMany(Photo::class, 'customer_id');
     }
 
     public function payments()
     {
-        return $this->hasMany(Payment::class, 'user_id');
+        return $this->hasMany(Payment::class, 'customer_id');
     }
-} 
+}

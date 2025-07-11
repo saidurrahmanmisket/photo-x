@@ -7,17 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Photo extends Model
 {
     protected $fillable = [
-        'user_id',
+        'customer_id',
         'kiosk_id',
         'frame_id',
         'effect_id',
         'booking_id',
-        'image_path',
     ];
 
-    public function user()
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
+    public function customer()
     {
-        return $this->belongsTo(Customer::class, 'user_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function kiosk()

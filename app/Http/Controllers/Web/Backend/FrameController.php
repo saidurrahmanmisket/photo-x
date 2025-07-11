@@ -51,7 +51,7 @@ class FrameController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:5120',
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:5120',
             'grid_columns' => 'required|integer|min:1',
             'grid_rows' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
@@ -92,7 +92,7 @@ class FrameController extends Controller
         $frame = Frame::findOrFail($id);
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:5120',
             'grid_columns' => 'required|integer|min:1',
             'grid_rows' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',

@@ -22,8 +22,8 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
-                                <h1 class="fs-2hx fw-bold text-success me-2 lh-1">{{ $totalFaqs }}</h1>
-                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total Kiosk</h4>
+                                <h1 class="fs-2hx fw-bold text-success me-2 lh-1">{{ $totalKiosks }}</h1>
+                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total Kiosks</h4>
                             </div>
                             <div>
                                 <i class="bi bi-question-circle-fill display-4 text-success"></i>
@@ -35,7 +35,7 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
-                                <h1 class="fs-2hx fw-bold text-info me-2 lh-1">{{ $totalDynamicPages }}</h1>
+                                <h1 class="fs-2hx fw-bold text-info me-2 lh-1">{{ $totalFrames }}</h1>
                                 <h4 class="fs-5 fw-semibold text-muted mt-2">Total Frames</h4>
                             </div>
                             <div>
@@ -49,8 +49,8 @@
                     <div class="card shadow-sm border-0">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
-                                <h1 class="fs-2hx fw-bold text-warning me-2 lh-1">{{ array_sum($data) }}</h1>
-                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total Visits </h4>
+                                <h1 class="fs-2hx fw-bold text-warning me-2 lh-1">{{ $totalPhotos }}</h1>
+                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total Photos</h4>
                             </div>
                             <div>
                                 <i class="bi bi-bar-chart-fill display-4 text-warning"></i>
@@ -63,7 +63,7 @@
                 <div class="col-12 mt-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
-                            <h2 class="text-lg font-bold mb-4">Last 7 Days Visits</h2>
+                            <h2 class="text-lg font-bold mb-4">Last 7 Days Photos Printed</h2>
                             <canvas id="visitorsChart" height="100"></canvas>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
             data: {
                 labels: @json($labels),
                 datasets: [{
-                    label: 'Visitors',
+                    label: 'Photos Printed',
                     data: @json($data),
                     fill: true,
                     borderColor: 'rgba(59, 130, 246, 1)',

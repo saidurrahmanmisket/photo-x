@@ -39,6 +39,28 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="phone" class="form-label">Phone</label>
+                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" 
+                                           id="phone" name="phone" value="{{ old('phone', $customer->phone) }}">
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control @error('address') is-invalid @enderror" 
+                                              id="address" name="address" rows="3">{{ old('address', $customer->address) }}</textarea>
+                                    @error('address')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-12">
                                 <div class="d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary">

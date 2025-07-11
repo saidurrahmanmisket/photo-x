@@ -13,12 +13,10 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>User</th>
+                                        <th>Customer</th>
                                         <th>Kiosk</th>
                                         <th>Frame</th>
                                         <th>Effect</th>
-                                        <th>Image</th>
-                                        <th>Created At</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
                                 </thead>
@@ -78,8 +76,8 @@
                                 searchable: false
                             },
                             {
-                                data: 'user',
-                                name: 'user',
+                                data: 'customer',
+                                name: 'customer',
                                 orderable: true,
                                 searchable: true
                             },
@@ -102,18 +100,6 @@
                                 searchable: true
                             },
                             {
-                                data: 'image',
-                                name: 'image',
-                                orderable: false,
-                                searchable: false
-                            },
-                            {
-                                data: 'created_at',
-                                name: 'created_at',
-                                orderable: true,
-                                searchable: true
-                            },
-                            {
                                 data: 'action',
                                 name: 'action',
                                 orderable: false,
@@ -123,7 +109,53 @@
                     });
                 }
             });
+
+            // delete Confirm
+            function showDeleteConfirm(id) {
+                event.preventDefault();
+                Swal.fire({
+                    title: 'Are you sure you want to delete this photo?',
+                    text: 'If you delete this, it will be gone forever.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteItem(id);
+                    }
+                });
+            }
+
+            // Delete Button
+            function deleteItem(id) {
+                let url = '{{ route('admin.photos.destroy', ':id') }}';
+                let csrfToken = '{{ csrf_token() }}';
+                $.ajax({
+                    type: "DELETE",
+                    url: url.replace(':id', id),
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    success: function(resp) {
+                        // Reload DataTable
+                        $('#data-table').DataTable().ajax.reload();
+                        if (resp.success === true) {
+                            // show toast message
+                            toastr.success(resp.message);
+                        } else if (resp.errors) {
+                            toastr.error(resp.errors[0]);
+                        } else {
+                            toastr.error(resp.message);
+                        }
+                    },
+                    error: function(error) {
+                        // Handle error
+                        toastr.error('An error occurred while deleting the photo.');
+                    }
+                });
+            }
         </script>
     @endpush
 @endsection
-

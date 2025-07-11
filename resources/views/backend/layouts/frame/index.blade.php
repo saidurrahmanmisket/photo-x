@@ -113,8 +113,8 @@
                 }
             });
 
-            // delete Confirm
-            function showDeleteConfirm(id) {
+            // Make functions globally accessible
+            window.showDeleteConfirm = function(id) {
                 event.preventDefault();
                 Swal.fire({
                     title: 'Are you sure you want to delete this record?',
@@ -136,19 +136,18 @@
                 let url = '{{ route('admin.frames.destroy', ':id') }}';
                 let csrfToken = '{{ csrf_token() }}';
                 $.ajax({
-                    type: "POST",
+                    type: "DELETE",
                     url: url.replace(':id', id),
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
                     },
                     success: function(resp) {
                         console.log(resp);
-                        // Reloade DataTable
+                        // Reload DataTable
                         $('#data-table').DataTable().ajax.reload();
                         if (resp.success === true) {
                             // show toast message
                             toastr.success(resp.message);
-
                         } else if (resp.errors) {
                             toastr.error(resp.errors[0]);
                         } else {
@@ -156,7 +155,8 @@
                         }
                     },
                     error: function(error) {
-                        // location.reload();
+                        console.error('Delete error:', error);
+                        toastr.error('An error occurred while deleting the frame.');
                     }
                 });
             }

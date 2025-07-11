@@ -14,7 +14,7 @@ class CustomerController extends Controller
     {
         if ($request->ajax()) {
             $customers = Customer::query();
-            
+
             if (!empty($request->input('search.value'))) {
                 $searchTerm = $request->input('search.value');
                 $customers->where(function($query) use ($searchTerm) {
@@ -23,7 +23,7 @@ class CustomerController extends Controller
                 });
             }
 
-            return DataTables::of($customers)
+            return datatables()->of($customers)
                 ->addIndexColumn()
                 ->addColumn('avatar', function ($row) {
                     return $row->avatar ? '<img src="' . asset($row->avatar) . '" style="max-width:40px; border-radius:50%;">' : '<div class="avatar-placeholder">' . strtoupper(substr($row->name, 0, 1)) . '</div>';
@@ -38,7 +38,7 @@ class CustomerController extends Controller
                     return $status;
                 })
                 ->addColumn('created_at', function ($row) {
-                    return $row->created_at ? $row->created_at->format('Y-m-d H:i') : '-';
+                    return $row->created_at ? $row->created_at->diffForHumans() : '-';
                 })
                 ->addColumn('action', function ($row) {
                     return '<div class="text-center"><div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -66,12 +66,16 @@ class CustomerController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:customers,email',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
         ]);
 
         try {
             Customer::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
                 'email_verified_at' => now(),
             ]);
 
@@ -90,16 +94,20 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         $customer = Customer::findOrFail($id);
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:customers,email,' . $customer->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
         ]);
 
         try {
             $customer->update([
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
             ]);
 
             return redirect()->route('admin.customers.index')->with('t-success', 'Customer updated successfully.');
@@ -111,7 +119,7 @@ class CustomerController extends Controller
     public function status($id): JsonResponse
     {
         $customer = Customer::findOrFail($id);
-        
+
         if ($customer->email_verified_at) {
             $customer->email_verified_at = null;
             $customer->save();
@@ -137,14 +145,14 @@ class CustomerController extends Controller
     {
         try {
             $customer = Customer::findOrFail($id);
-            
+
             // Delete customer's avatar if exists
             if ($customer->avatar && file_exists(public_path($customer->avatar))) {
                 unlink(public_path($customer->avatar));
             }
-            
+
             $customer->delete();
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Customer deleted successfully.',
@@ -157,4 +165,4 @@ class CustomerController extends Controller
             ], 500);
         }
     }
-} 
+}

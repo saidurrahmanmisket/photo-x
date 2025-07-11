@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Photo;
-use App\Models\User;
+use App\Models\Customer;
 use App\Models\Kiosk;
 use App\Models\Frame;
 use App\Models\Effect;
@@ -19,11 +19,11 @@ class PhotoController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $photos = Photo::with(['user', 'kiosk', 'frame', 'effect'])->select('photos.*');
+            $photos = Photo::with(['customer', 'kiosk', 'frame', 'effect'])->select('photos.*');
             return datatables()->of($photos)
                 ->addIndexColumn()
-                ->addColumn('user', function ($row) {
-                    return $row->user ? $row->user->name : '-';
+                ->addColumn('customer', function ($row) {
+                    return $row->customer ? $row->customer->name : '-';
                 })
                 ->addColumn('kiosk', function ($row) {
                     return $row->kiosk ? $row->kiosk->name : '-';
@@ -34,19 +34,13 @@ class PhotoController extends Controller
                 ->addColumn('effect', function ($row) {
                     return $row->effect ? $row->effect->name : '-';
                 })
-                ->addColumn('image', function ($row) {
-                    return $row->image_path ? '<img src="' . asset($row->image_path) . '" style="max-width:60px;">' : '-';
-                })
-                ->addColumn('created_at', function ($row) {
-                    return $row->created_at ? $row->created_at->format('Y-m-d H:i') : '-';
-                })
                 ->addColumn('action', function ($row) {
                     $showUrl = route('admin.photos.show', $row->id);
                     $deleteBtn = "<a href='#' onclick='showDeleteConfirm($row->id)' class='btn btn-danger btn-sm'>Delete</a>";
                     $showBtn = "<a href='$showUrl' class='btn btn-info btn-sm'>View</a>";
                     return "$showBtn $deleteBtn";
                 })
-                ->rawColumns(['image', 'action'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
         return view('backend.layouts.photo.index');
@@ -73,7 +67,7 @@ class PhotoController extends Controller
      */
     public function show($id)
     {
-        $photo = Photo::with(['user', 'kiosk', 'frame', 'effect'])->findOrFail($id);
+        $photo = Photo::with(['customer', 'kiosk', 'frame', 'effect'])->findOrFail($id);
         return view('backend.layouts.photo.show', compact('photo'));
     }
 
@@ -99,9 +93,6 @@ class PhotoController extends Controller
     public function destroy($id)
     {
         $photo = Photo::findOrFail($id);
-        if ($photo->image_path && file_exists(public_path($photo->image_path))) {
-            unlink(public_path($photo->image_path));
-        }
         $photo->delete();
         return response()->json(['success' => true, 'message' => 'Photo deleted successfully.']);
     }

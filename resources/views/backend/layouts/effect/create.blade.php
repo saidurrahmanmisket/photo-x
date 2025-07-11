@@ -22,9 +22,9 @@
                             <label for="frame_id" class="form-label">Frame (optional)</label>
                             <select class="form-control" id="frame_id" name="frame_id">
                                 <option value="">None</option>
-                                {{-- @foreach($frames as $frame)
+                                @foreach($frames as $frame)
                                     <option value="{{ $frame->id }}">{{ $frame->name }}</option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Save</button>

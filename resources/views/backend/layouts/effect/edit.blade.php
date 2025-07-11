@@ -26,9 +26,9 @@
                             <label for="frame_id" class="form-label">Frame (optional)</label>
                             <select class="form-control" id="frame_id" name="frame_id">
                                 <option value="">None</option>
-                                {{-- @foreach($frames as $frame)
+                                @foreach($frames as $frame)
                                     <option value="{{ $frame->id }}" {{ $effect->frame_id == $frame->id ? 'selected' : '' }}>{{ $frame->name }}</option>
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary">Update</button>

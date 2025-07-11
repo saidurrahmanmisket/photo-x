@@ -32,8 +32,8 @@ Route::post('kiosks/status/{id}', [KioskController::class, 'status'])->name('adm
 Route::resource('frames', FrameController::class, ['as' => 'admin']);
 // Effect Management
 Route::resource('effects', EffectController::class, ['as' => 'admin']);
-// Photo Management (view only: index, show)
-Route::resource('photos', PhotoController::class, ['as' => 'admin'])->only(['index', 'show']);
+// Photo Management
+Route::resource('photos', PhotoController::class, ['as' => 'admin']);
 // Payment Management (view only: index, show)
 Route::resource('payments', PaymentController::class, ['as' => 'admin'])->only(['index', 'show']);
 

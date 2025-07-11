@@ -10,15 +10,10 @@ class Kiosk extends Model
         'name',
         'device_id',
         'status',
-        'linked_user_id',
         'activation_code',
         'last_seen_at',
     ];
 
-    public function linkedUser()
-    {
-        return $this->belongsTo(User::class, 'linked_user_id');
-    }
 
     public function photos()
     {

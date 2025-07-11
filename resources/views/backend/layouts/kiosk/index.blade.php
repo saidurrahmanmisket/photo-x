@@ -19,7 +19,6 @@
                                         <th>Name</th>
                                         <th>Device ID</th>
                                         <th>Status</th>
-                                        <th>Linked User</th>
                                         <th>Last Seen</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -94,12 +93,6 @@
                             {
                                 data: 'status',
                                 name: 'status',
-                                orderable: true,
-                                searchable: true
-                            },
-                            {
-                                data: 'linked_user',
-                                name: 'linked_user',
                                 orderable: true,
                                 searchable: true
                             },
@@ -186,7 +179,7 @@
                 let url = '{{ route('admin.kiosks.destroy', ':id') }}';
                 let csrfToken = '{{ csrf_token() }}';
                 $.ajax({
-                    type: "POST",
+                    type: "DELETE",
                     url: url.replace(':id', id),
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
@@ -206,11 +199,11 @@
                         }
                     },
                     error: function(error) {
-                        // location.reload();
+                        // Handle error
+                        toastr.error('An error occurred while deleting the kiosk.');
                     }
                 });
             }
         </script>
     @endpush
 @endsection
-
