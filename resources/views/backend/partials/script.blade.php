@@ -29,6 +29,7 @@
 {{-- Main-Resourse start --}}
 <script src="{{ asset('backend/js/jquery-3.7.1.js') }}" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
     crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('backend/js/datatables.min.js') }}"></script>
 <script src="{{ asset('backend/js/sweetalert2@11.js') }}"></script>
 <script src="{{ asset('backend/js/toastr.min.js') }}"></script>

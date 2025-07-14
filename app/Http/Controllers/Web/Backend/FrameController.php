@@ -41,7 +41,8 @@ class FrameController extends Controller
      */
     public function create()
     {
-        return view('backend.layouts.frame.create');
+        $kiosks = \App\Models\Kiosk::all();
+        return view('backend.layouts.frame.create', compact('kiosks'));
     }
 
     /**
@@ -55,15 +56,22 @@ class FrameController extends Controller
             'grid_columns' => 'required|integer|min:1',
             'grid_rows' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'kiosk_ids' => 'required|array',
+            'kiosk_ids.*' => 'exists:kiosks,id',
         ]);
         $imagePath = $request->hasFile('image') ? uploadImage($request->file('image'), 'frames') : null;
-        Frame::create([
+        $frame = Frame::create([
             'name' => $request->name,
             'image' => $imagePath,
             'grid_columns' => $request->grid_columns,
             'grid_rows' => $request->grid_rows,
             'price' => $request->price,
         ]);
+        $kioskIds = $request->kiosk_ids;
+        if (in_array('all', $kioskIds)) {
+            $kioskIds = \App\Models\Kiosk::pluck('id')->toArray();
+        }
+        $frame->kiosks()->sync($kioskIds);
         return redirect()->route('admin.frames.index')->with('t-success', 'Frame created successfully.');
     }
 
@@ -81,7 +89,9 @@ class FrameController extends Controller
     public function edit($id)
     {
         $frame = Frame::findOrFail($id);
-        return view('backend.layouts.frame.edit', compact('frame'));
+        $kiosks = \App\Models\Kiosk::all();
+        $selectedKiosks = $frame->kiosks->pluck('id')->toArray();
+        return view('backend.layouts.frame.edit', compact('frame', 'kiosks', 'selectedKiosks'));
     }
 
     /**
@@ -96,6 +106,8 @@ class FrameController extends Controller
             'grid_columns' => 'required|integer|min:1',
             'grid_rows' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'kiosk_ids' => 'required|array',
+            'kiosk_ids.*' => 'exists:kiosks,id',
         ]);
         $data = $request->only(['name', 'grid_columns', 'grid_rows', 'price']);
         if ($request->hasFile('image')) {
@@ -105,6 +117,11 @@ class FrameController extends Controller
             $data['image'] = uploadImage($request->file('image'), 'frames');
         }
         $frame->update($data);
+        $kioskIds = $request->kiosk_ids;
+        if (in_array('all', $kioskIds)) {
+            $kioskIds = \App\Models\Kiosk::pluck('id')->toArray();
+        }
+        $frame->kiosks()->sync($kioskIds);
         return redirect()->route('admin.frames.index')->with('t-success', 'Frame updated successfully.');
     }
 

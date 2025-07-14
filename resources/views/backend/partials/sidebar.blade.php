@@ -107,6 +107,12 @@
                     </a>
                 </div>
                 <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('admin.advertisements.*') ? 'active' : '' }}" href="{{ route('admin.advertisements.index') }}">
+                        <span class="menu-icon"><i class="fa-solid fa-bullhorn fs-2"></i></span>
+                        <span class="menu-title">Advertisements</span>
+                    </a>
+                </div>
+                <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}" href="{{ route('admin.payments.index') }}">
                         <span class="menu-icon"><i class="fa-solid fa-money-bill-wave fs-2"></i></span>
                         <span class="menu-title">Payments</span>

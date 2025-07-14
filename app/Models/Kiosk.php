@@ -11,6 +11,8 @@ class Kiosk extends Model
         'device_id',
         'status',
         'activation_code',
+        'max_clicks',
+        'max_capture_seconds',
         'last_seen_at',
     ];
 
@@ -33,5 +35,10 @@ class Kiosk extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function frames()
+    {
+        return $this->belongsToMany(Frame::class, 'frame_kiosk');
     }
 }

@@ -31,6 +31,16 @@
                             <label for="activation_code" class="form-label">Activation Code</label>
                             <input type="text" class="form-control" id="activation_code" name="activation_code" value="{{ $kiosk->activation_code }}">
                         </div>
+                        <div class="mb-3">
+                            <label for="max_clicks" class="form-label">Maximum Clicks</label>
+                            <input type="number" class="form-control" id="max_clicks" name="max_clicks" min="1" value="{{ $kiosk->max_clicks }}">
+                            <small class="text-muted">Maximum number of clicks allowed for this kiosk (optional)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="max_capture_seconds" class="form-label">Maximum Seconds for Capture</label>
+                            <input type="number" class="form-control" id="max_capture_seconds" name="max_capture_seconds" min="1" value="{{ $kiosk->max_capture_seconds }}">
+                            <small class="text-muted">Maximum seconds allowed for capturing an image (optional)</small>
+                        </div>
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a href="{{ route('admin.kiosks.index') }}" class="btn btn-secondary">Cancel</a>
                     </form>

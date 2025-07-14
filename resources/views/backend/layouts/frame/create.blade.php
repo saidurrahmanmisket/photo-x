@@ -46,6 +46,19 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+                        <div class="mb-3">
+                            <label for="kiosk_ids" class="form-label">Kiosks</label>
+                            <select class="form-select @error('kiosk_ids') is-invalid @enderror" id="kiosk_ids" name="kiosk_ids[]" multiple required>
+                                <option value="all">All Kiosks</option>
+                                @foreach($kiosks as $kiosk)
+                                    <option value="{{ $kiosk->id }}">{{ $kiosk->name }} ({{ $kiosk->device_id }})</option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple kiosks.</small>
+                            @error('kiosk_ids')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                         <a href="{{ route('admin.frames.index') }}" class="btn btn-secondary">Cancel</a>
                     </form>
@@ -55,3 +68,15 @@
     </div>
 </section>
 @endsection
+
+@push('script')
+<script>
+$(document).ready(function() {
+    $('#kiosk_ids').select2({
+        placeholder: 'Select kiosks',
+        allowClear: true,
+        width: '100%'
+    });
+});
+</script>
+@endpush

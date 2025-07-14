@@ -23,4 +23,9 @@ class Frame extends Model
     {
         return $this->hasMany(Photo::class);
     }
+
+    public function kiosks()
+    {
+        return $this->belongsToMany(Kiosk::class, 'frame_kiosk');
+    }
 }

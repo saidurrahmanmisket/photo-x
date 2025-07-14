@@ -58,8 +58,10 @@ class KioskController extends Controller
             'device_id' => 'required|string|max:255|unique:kiosks,device_id',
             'status' => 'required|in:active,inactive',
             'activation_code' => 'nullable|string|max:255',
+            'max_clicks' => 'nullable|integer|min:1',
+            'max_capture_seconds' => 'nullable|integer|min:1',
         ]);
-        Kiosk::create($request->only(['name', 'device_id', 'status', 'activation_code']));
+        Kiosk::create($request->only(['name', 'device_id', 'status', 'activation_code', 'max_clicks', 'max_capture_seconds']));
         return redirect()->route('admin.kiosks.index')->with('t-success', 'Kiosk created successfully.');
     }
 
@@ -91,8 +93,10 @@ class KioskController extends Controller
             'device_id' => 'required|string|max:255|unique:kiosks,device_id,' . $kiosk->id,
             'status' => 'required|in:active,inactive',
             'activation_code' => 'nullable|string|max:255',
+            'max_clicks' => 'nullable|integer|min:1',
+            'max_capture_seconds' => 'nullable|integer|min:1',
         ]);
-        $kiosk->update($request->only(['name', 'device_id', 'status', 'activation_code']));
+        $kiosk->update($request->only(['name', 'device_id', 'status', 'activation_code', 'max_clicks', 'max_capture_seconds']));
         return redirect()->route('admin.kiosks.index')->with('t-success', 'Kiosk updated successfully.');
     }
 
