@@ -18,20 +18,22 @@ class AdvertisementController extends Controller
 
     public function create()
     {
-        return view('backend.layouts.advertisement.create');
+        $kiosks = \App\Models\Kiosk::all();
+        return view('backend.layouts.advertisement.create', compact('kiosks'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
             'media.*' => 'required|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi|max:20480',
+            'kiosk_ids' => 'nullable|array',
+            'kiosk_ids.*' => 'exists:kiosks,id',
         ]);
         DB::beginTransaction();
         try {
-            $ad = Advertisement::create($request->only(['title', 'description', 'status']));
+            $ad = Advertisement::create($request->only(['title', 'status']));
             if ($request->hasFile('media')) {
                 foreach ($request->file('media') as $file) {
                     $type = in_array($file->extension(), ['mp4', 'mov', 'avi']) ? 'video' : 'image';
@@ -43,6 +45,7 @@ class AdvertisementController extends Controller
                     ]);
                 }
             }
+            $ad->kiosks()->sync($request->input('kiosk_ids', []));
             DB::commit();
             return redirect()->route('admin.advertisements.index')->with('t-success', 'Advertisement created successfully.');
         } catch (\Exception $e) {
@@ -53,8 +56,10 @@ class AdvertisementController extends Controller
 
     public function edit($id)
     {
-        $ad = Advertisement::with('media')->findOrFail($id);
-        return view('backend.layouts.advertisement.edit', compact('ad'));
+        $ad = Advertisement::with('media', 'kiosks')->findOrFail($id);
+        $kiosks = \App\Models\Kiosk::all();
+        $selectedKiosks = $ad->kiosks->pluck('id')->toArray();
+        return view('backend.layouts.advertisement.edit', compact('ad', 'kiosks', 'selectedKiosks'));
     }
 
     public function update(Request $request, $id)
@@ -62,13 +67,14 @@ class AdvertisementController extends Controller
         $ad = Advertisement::findOrFail($id);
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
             'media.*' => 'nullable|file|mimes:jpeg,png,jpg,webp,mp4,mov,avi|max:20480',
+            'kiosk_ids' => 'nullable|array',
+            'kiosk_ids.*' => 'exists:kiosks,id',
         ]);
         DB::beginTransaction();
         try {
-            $ad->update($request->only(['title', 'description', 'status']));
+            $ad->update($request->only(['title', 'status']));
             if ($request->hasFile('media')) {
                 foreach ($request->file('media') as $file) {
                     $type = in_array($file->extension(), ['mp4', 'mov', 'avi']) ? 'video' : 'image';
@@ -80,6 +86,7 @@ class AdvertisementController extends Controller
                     ]);
                 }
             }
+            $ad->kiosks()->sync($request->input('kiosk_ids', []));
             DB::commit();
             return redirect()->route('admin.advertisements.index')->with('t-success', 'Advertisement updated successfully.');
         } catch (\Exception $e) {

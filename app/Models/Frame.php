@@ -16,7 +16,7 @@ class Frame extends Model
 
     public function effects()
     {
-        return $this->hasMany(Effect::class);
+        return $this->belongsToMany(Effect::class, 'effect_frame');
     }
 
     public function photos()

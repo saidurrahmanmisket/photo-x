@@ -42,7 +42,7 @@ class EffectController extends Controller
      */
     public function create()
     {
-        $frames = Frame::all();
+        $frames = \App\Models\Frame::all();
         return view('backend.layouts.effect.create', compact('frames'));
     }
 
@@ -54,14 +54,15 @@ class EffectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:5120',
-            'frame_id' => 'nullable|exists:frames,id',
+            'frame_ids' => 'nullable|array',
+            'frame_ids.*' => 'exists:frames,id',
         ]);
         $imagePath = $request->hasFile('image') ? uploadImage($request->file('image'), 'effects') : null;
-        Effect::create([
+        $effect = Effect::create([
             'name' => $request->name,
             'image' => $imagePath,
-            'frame_id' => $request->frame_id,
         ]);
+        $effect->frames()->sync($request->input('frame_ids', []));
         return redirect()->route('admin.effects.index')->with('t-success', 'Effect created successfully.');
     }
 
@@ -78,9 +79,10 @@ class EffectController extends Controller
      */
     public function edit($id)
     {
-        $effect = Effect::findOrFail($id);
-        $frames = Frame::all();
-        return view('backend.layouts.effect.edit', compact('effect', 'frames'));
+        $effect = Effect::with('frames')->findOrFail($id);
+        $frames = \App\Models\Frame::all();
+        $selectedFrames = $effect->frames->pluck('id')->toArray();
+        return view('backend.layouts.effect.edit', compact('effect', 'frames', 'selectedFrames'));
     }
 
     /**
@@ -92,9 +94,10 @@ class EffectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:5120',
-            'frame_id' => 'nullable|exists:frames,id',
+            'frame_ids' => 'nullable|array',
+            'frame_ids.*' => 'exists:frames,id',
         ]);
-        $data = $request->only(['name', 'frame_id']);
+        $data = $request->only(['name']);
         if ($request->hasFile('image')) {
             if ($effect->image && file_exists(public_path($effect->image))) {
                 unlink(public_path($effect->image));
@@ -102,6 +105,7 @@ class EffectController extends Controller
             $data['image'] = uploadImage($request->file('image'), 'effects');
         }
         $effect->update($data);
+        $effect->frames()->sync($request->input('frame_ids', []));
         return redirect()->route('admin.effects.index')->with('t-success', 'Effect updated successfully.');
     }
 

@@ -9,7 +9,6 @@ class Effect extends Model
     protected $fillable = [
         'name',
         'image',
-        'frame_id',
     ];
 
     public function frame()
@@ -20,5 +19,10 @@ class Effect extends Model
     public function photos()
     {
         return $this->hasMany(Photo::class);
+    }
+
+    public function frames()
+    {
+        return $this->belongsToMany(Frame::class, 'effect_frame');
     }
 }

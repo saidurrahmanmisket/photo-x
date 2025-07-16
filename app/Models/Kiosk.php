@@ -13,6 +13,7 @@ class Kiosk extends Model
         'activation_code',
         'max_clicks',
         'max_capture_seconds',
+        'max_idle_seconds',
         'last_seen_at',
     ];
 
@@ -40,5 +41,10 @@ class Kiosk extends Model
     public function frames()
     {
         return $this->belongsToMany(Frame::class, 'frame_kiosk');
+    }
+
+    public function advertisements()
+    {
+        return $this->belongsToMany(Advertisement::class, 'advertisement_kiosk');
     }
 }

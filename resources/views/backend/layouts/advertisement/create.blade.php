@@ -18,13 +18,6 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description') }}</textarea>
-                            @error('description')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
                                 <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
@@ -33,6 +26,15 @@
                             @error('status')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="kiosk_ids" class="form-label">Kiosks (optional, multi-select)</label>
+                            <select class="form-control select2" id="kiosk_ids" name="kiosk_ids[]" multiple>
+                                <option value="all">All</option>
+                                @foreach($kiosks as $kiosk)
+                                    <option value="{{ $kiosk->id }}">{{ $kiosk->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Media (Images or Videos)</label>
@@ -84,6 +86,20 @@ $('#adForm').on('submit', function(e) {
     });
     // Now submit the form
     this.submit();
+});
+
+$(document).ready(function() {
+    $('#kiosk_ids').select2({
+        placeholder: 'Select kiosks (optional)',
+        allowClear: true
+    });
+    $('#kiosk_ids').on('change', function() {
+        if ($(this).val() && $(this).val().includes('all')) {
+            // Select all except 'all'
+            let allValues = @json($kiosks->pluck('id')->map(fn($id) => (string)$id)->toArray());
+            $(this).val(['all', ...allValues]).trigger('change.select2');
+        }
+    });
 });
 </script>
 @endpush 
