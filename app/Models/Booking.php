@@ -18,6 +18,8 @@ class Booking extends Model
         'expires_at',
         'transaction_id',
         'notes',
+        'access_token',
+        'last_accessed_at',
     ];
 
     protected $casts = [
