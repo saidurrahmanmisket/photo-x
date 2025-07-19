@@ -35,6 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'jwt.verify' => JWTMiddleware::class,
             'admin' => Admin::class,
             'LogVisits' => LogVisits::class,
+            'kiosk.auth' => \App\Http\Middleware\KioskAuthMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

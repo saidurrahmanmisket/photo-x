@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\FaqController;
 use App\Http\Controllers\Api\SitesettingController;
 use App\Http\Controllers\Api\SocialLinkController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\KioskAuthController;
+use App\Http\Controllers\Api\KioskDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,38 +26,38 @@ use App\Http\Controllers\Api\UserController;
 
 
 //Social Login
-Route::post('/social-login', [SocialAuthController::class, 'socialLogin']);
+//Route::post('/social-login', [SocialAuthController::class, 'socialLogin']);
 
 //Register API
-Route::controller(RegisterController::class)->prefix('users/register')->group(function () {
-    // User Register
-    Route::post('/', 'userRegister');
-
-    // Verify OTP
-    Route::post('/otp-verify', 'otpVerify');
-
-    // Resend OTP
-    Route::post('/otp-resend', 'otpResend');
-});
+//Route::controller(RegisterController::class)->prefix('users/register')->group(function () {
+//    // User Register
+//    Route::post('/', 'userRegister');
+//
+//    // Verify OTP
+//    Route::post('/otp-verify', 'otpVerify');
+//
+//    // Resend OTP
+//    Route::post('/otp-resend', 'otpResend');
+//});
 
 //Login API
-Route::controller(LoginController::class)->prefix('users/login')->group(function () {
-
-    // User Login
-    Route::post('/', 'userLogin');
-
-    // Verify Email
-    Route::post('/email-verify', 'emailVerify');
-
-    // Resend OTP
-    Route::post('/otp-resend', 'otpResend');
-
-    // Verify OTP
-    Route::post('/otp-verify', 'otpVerify');
-
-    //Reset Password
-    Route::post('/reset-password', 'resetPassword');
-});
+//Route::controller(LoginController::class)->prefix('users/login')->group(function () {
+//
+//    // User Login
+//    Route::post('/', 'userLogin');
+//
+//    // Verify Email
+//    Route::post('/email-verify', 'emailVerify');
+//
+//    // Resend OTP
+//    Route::post('/otp-resend', 'otpResend');
+//
+//    // Verify OTP
+//    Route::post('/otp-verify', 'otpVerify');
+//
+//    //Reset Password
+//    Route::post('/reset-password', 'resetPassword');
+//});
 
 Route::controller(SitesettingController::class)->group(function () {
     Route::get('/site-settings', 'siteSettings');
@@ -75,6 +77,19 @@ Route::controller(SocialLinkController::class)->group(function () {
 //FAQ APIs
 Route::controller(FaqController::class)->group(function () {
     Route::get('/faq/all', 'FaqAll');
+});
+
+// Kiosk Authentication Routes
+Route::post('kiosk/login', [KioskAuthController::class, 'login']);
+Route::post('kiosk/validate-token', [KioskAuthController::class, 'validateToken']);
+Route::post('kiosk/logout', [KioskAuthController::class, 'logout']);
+
+// Kiosk Data Routes (Protected)
+Route::middleware('kiosk.auth')->group(function() {
+    Route::get('kiosk/frames', [KioskDataController::class, 'getFrames']);
+    Route::get('kiosk/effects', [KioskDataController::class, 'getEffects']);
+    Route::get('kiosk/advertisements', [KioskDataController::class, 'getAdvertisements']);
+    Route::get('kiosk/all-data', [KioskDataController::class, 'getAllData']);
 });
 
 Route::group(['middleware' => ['jwt.verify']], function () {
