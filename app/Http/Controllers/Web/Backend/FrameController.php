@@ -42,7 +42,13 @@ class FrameController extends Controller
     public function create()
     {
         $kiosks = \App\Models\Kiosk::all();
-        return view('backend.layouts.frame.create', compact('kiosks'));
+        $gridOptions = [
+            '2x2' => '2 x 2',
+            '3x2' => '3 x 2',
+            '1x1' => '1 x 1',
+            '3x3' => '3 x 3',
+        ];
+        return view('backend.layouts.frame.create', compact('kiosks', 'gridOptions'));
     }
 
     /**
@@ -53,18 +59,18 @@ class FrameController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,svg,webp|max:5120',
-            'grid_columns' => 'required|integer|min:1',
-            'grid_rows' => 'required|integer|min:1',
+            'grid_option' => 'required|in:2x2,3x2,1x1,3x3',
             'price' => 'required|numeric|min:0',
             'kiosk_ids' => 'required|array',
             'kiosk_ids.*' => 'exists:kiosks,id',
         ]);
         $imagePath = $request->hasFile('image') ? uploadImage($request->file('image'), 'frames') : null;
+        list($grid_columns, $grid_rows) = explode('x', $request->grid_option);
         $frame = Frame::create([
             'name' => $request->name,
             'image' => $imagePath,
-            'grid_columns' => $request->grid_columns,
-            'grid_rows' => $request->grid_rows,
+            'grid_columns' => $grid_columns,
+            'grid_rows' => $grid_rows,
             'price' => $request->price,
         ]);
         $kioskIds = $request->kiosk_ids;
@@ -91,7 +97,14 @@ class FrameController extends Controller
         $frame = Frame::findOrFail($id);
         $kiosks = \App\Models\Kiosk::all();
         $selectedKiosks = $frame->kiosks->pluck('id')->toArray();
-        return view('backend.layouts.frame.edit', compact('frame', 'kiosks', 'selectedKiosks'));
+        $gridOptions = [
+            '2x2' => '2 x 2',
+            '3x2' => '3 x 2',
+            '1x1' => '1 x 1',
+            '3x3' => '3 x 3',
+        ];
+        $selectedGrid = $frame->grid_columns . 'x' . $frame->grid_rows;
+        return view('backend.layouts.frame.edit', compact('frame', 'kiosks', 'selectedKiosks', 'gridOptions', 'selectedGrid'));
     }
 
     /**
@@ -103,13 +116,15 @@ class FrameController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:5120',
-            'grid_columns' => 'required|integer|min:1',
-            'grid_rows' => 'required|integer|min:1',
+            'grid_option' => 'required|in:2x2,3x2,1x1,3x3',
             'price' => 'required|numeric|min:0',
             'kiosk_ids' => 'required|array',
             'kiosk_ids.*' => 'exists:kiosks,id',
         ]);
-        $data = $request->only(['name', 'grid_columns', 'grid_rows', 'price']);
+        list($grid_columns, $grid_rows) = explode('x', $request->grid_option);
+        $data = $request->only(['name', 'price']);
+        $data['grid_columns'] = $grid_columns;
+        $data['grid_rows'] = $grid_rows;
         if ($request->hasFile('image')) {
             if ($frame->image && file_exists(public_path($frame->image))) {
                 unlink(public_path($frame->image));

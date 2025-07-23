@@ -44,6 +44,19 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12 col-md-4 col-lg-3 mt-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h1 class="fs-2hx fw-bold text-purple me-2 lh-1">{{ $totalThemes ?? 0 }}</h1>
+                                <h4 class="fs-5 fw-semibold text-muted mt-2">Total Themes</h4>
+                            </div>
+                            <div>
+                                <i class="fa-solid fa-palette display-4 text-purple"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Total Visits Card -->
                 <div class="col-12 col-md-4 col-lg-3 mt-4">
                     <div class="card shadow-sm border-0">

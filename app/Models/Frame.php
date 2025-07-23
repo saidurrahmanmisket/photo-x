@@ -14,11 +14,6 @@ class Frame extends Model
         'price',
     ];
 
-    public function effects()
-    {
-        return $this->belongsToMany(Effect::class, 'effect_frame');
-    }
-
     public function photos()
     {
         return $this->hasMany(Photo::class);

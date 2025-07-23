@@ -11,6 +11,7 @@ use App\Http\Controllers\Web\Backend\CustomerController;
 use App\Http\Controllers\Web\Backend\BookingController;
 use App\Http\Controllers\Web\Backend\AdvertisementController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ThemeController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -65,3 +66,6 @@ Route::controller(BookingController::class)->group(function () {
 // Advertisement Management
 Route::resource('advertisements', AdvertisementController::class, ['as' => 'admin']);
 Route::post('advertisements/media/destroy/{id}', [AdvertisementController::class, 'destroyMedia'])->name('admin.advertisements.media.destroy');
+
+// Theme Management
+Route::resource('themes', ThemeController::class, ['as' => 'admin']);

@@ -47,4 +47,9 @@ class Kiosk extends Model
     {
         return $this->belongsToMany(Advertisement::class, 'advertisement_kiosk');
     }
+
+    public function themes()
+    {
+        return $this->belongsToMany(Theme::class, 'kiosk_theme');
+    }
 }

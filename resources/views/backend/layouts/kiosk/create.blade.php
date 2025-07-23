@@ -58,6 +58,19 @@
                       <div class="invalid-feedback">{{ $message }}</div>
                   @enderror
               </div>
+              <div class="mb-3">
+                  <label for="grid_option" class="form-label">Grid Option</label>
+                  <select class="form-control @error('grid_option') is-invalid @enderror" id="grid_option" name="grid_option" required>
+                      <option value="">Select Grid</option>
+                      <option value="2x2" {{ old('grid_option') == '2x2' ? 'selected' : '' }}>2 x 2</option>
+                      <option value="3x2" {{ old('grid_option') == '3x2' ? 'selected' : '' }}>3 x 2</option>
+                      <option value="1x1" {{ old('grid_option') == '1x1' ? 'selected' : '' }}>1 x 1</option>
+                      <option value="3x3" {{ old('grid_option') == '3x3' ? 'selected' : '' }}>3 x 3</option>
+                  </select>
+                  @error('grid_option')
+                      <div class="invalid-feedback">{{ $message }}</div>
+                  @enderror
+              </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                         <a href="{{ route('admin.kiosks.index') }}" class="btn btn-secondary">Cancel</a>
                     </form>

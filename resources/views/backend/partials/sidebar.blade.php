@@ -83,6 +83,12 @@
                     </a>
                 </div>
                 <div class="menu-item">
+                    <a class="menu-link {{ request()->routeIs('admin.themes.*') ? 'active' : '' }}" href="{{ route('admin.themes.index') }}">
+                        <span class="menu-icon"><i class="fa-solid fa-palette fs-2"></i></span>
+                        <span class="menu-title">Themes</span>
+                    </a>
+                </div>
+                <div class="menu-item">
                     <a class="menu-link {{ request()->routeIs('admin.effects.*') ? 'active' : '' }}" href="{{ route('admin.effects.index') }}">
                         <span class="menu-icon"><i class="fa-solid fa-wand-magic-sparkles fs-2"></i></span>
                         <span class="menu-title">Effects</span>

@@ -58,10 +58,21 @@ class KioskController extends Controller
             'device_id' => 'required|string|max:255|unique:kiosks,device_id',
             'status' => 'required|in:active,inactive',
             'activation_code' => 'nullable|string|max:255',
-            'max_clicks' => 'nullable|integer|min:1',
+            'max_clicks' => 'required|integer|min:1|max:500',
             'max_capture_seconds' => 'nullable|integer|min:1',
+            'grid_option' => 'required|in:2x2,3x2,1x1,3x3',
         ]);
-        Kiosk::create($request->only(['name', 'device_id', 'status', 'activation_code', 'max_clicks', 'max_capture_seconds']));
+        list($grid_columns, $grid_rows) = explode('x', $request->grid_option);
+        Kiosk::create([
+            'name' => $request->name,
+            'device_id' => $request->device_id,
+            'status' => $request->status,
+            'activation_code' => $request->activation_code,
+            'max_clicks' => $request->max_clicks,
+            'max_capture_seconds' => $request->max_capture_seconds,
+            'grid_columns' => $grid_columns,
+            'grid_rows' => $grid_rows,
+        ]);
         return redirect()->route('admin.kiosks.index')->with('t-success', 'Kiosk created successfully.');
     }
 
@@ -93,10 +104,21 @@ class KioskController extends Controller
             'device_id' => 'required|string|max:255|unique:kiosks,device_id,' . $kiosk->id,
             'status' => 'required|in:active,inactive',
             'activation_code' => 'nullable|string|max:255',
-            'max_clicks' => 'nullable|integer|min:1',
+            'max_clicks' => 'required|integer|min:1|max:500',
             'max_capture_seconds' => 'nullable|integer|min:1',
+            'grid_option' => 'required|in:2x2,3x2,1x1,3x3',
         ]);
-        $kiosk->update($request->only(['name', 'device_id', 'status', 'activation_code', 'max_clicks', 'max_capture_seconds']));
+        list($grid_columns, $grid_rows) = explode('x', $request->grid_option);
+        $kiosk->update([
+            'name' => $request->name,
+            'device_id' => $request->device_id,
+            'status' => $request->status,
+            'activation_code' => $request->activation_code,
+            'max_clicks' => $request->max_clicks,
+            'max_capture_seconds' => $request->max_capture_seconds,
+            'grid_columns' => $grid_columns,
+            'grid_rows' => $grid_rows,
+        ]);
         return redirect()->route('admin.kiosks.index')->with('t-success', 'Kiosk updated successfully.');
     }
 
