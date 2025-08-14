@@ -27,7 +27,7 @@ class KioskDataController extends Controller
         }
 
         $kiosk = Kiosk::find($booking->kiosk_id);
-        $frames = $kiosk->frames()->with('effects')->get();
+        $frames = $kiosk->frames()->with('kiosks')->get();
 
         return $this->success($frames, 'Frames retrieved successfully');
     }
@@ -43,7 +43,7 @@ class KioskDataController extends Controller
         }
 
         $kiosk = Kiosk::find($booking->kiosk_id);
-        
+
         // Get effects that are assigned to frames that are assigned to this kiosk
         $effects = Effect::whereHas('frames', function($query) use ($kiosk) {
             $query->whereHas('kiosks', function($q) use ($kiosk) {
@@ -84,17 +84,17 @@ class KioskDataController extends Controller
         }
 
         $kiosk = Kiosk::find($booking->kiosk_id);
-        
+
         // Get frames with their effects
-        $frames = $kiosk->frames()->with('effects')->get();
-        
+        $frames = $kiosk->frames()->with('kiosks')->get();
+
         // Get effects assigned to frames of this kiosk
         $effects = Effect::whereHas('frames', function($query) use ($kiosk) {
             $query->whereHas('kiosks', function($q) use ($kiosk) {
                 $q->where('kiosks.id', $kiosk->id);
             });
         })->get();
-        
+
         // Get active advertisements
         $advertisements = $kiosk->advertisements()
                                ->with('media')
@@ -128,7 +128,7 @@ class KioskDataController extends Controller
     private function getAuthenticatedBooking(Request $request)
     {
         $token = $request->bearerToken();
-        
+
         if (!$token) {
             return null;
         }
@@ -148,4 +148,4 @@ class KioskDataController extends Controller
 
         return $booking;
     }
-} 
+}
