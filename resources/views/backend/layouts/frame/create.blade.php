@@ -26,16 +26,14 @@
                             @enderror
                         </div>
                         <div class="mb-3">
-                            <label for="grid_columns" class="form-label">Grid Columns</label>
-                            <input type="number" class="form-control @error('grid_columns') is-invalid @enderror" id="grid_columns" name="grid_columns" min="1" value="{{ old('grid_columns') }}" required>
-                            @error('grid_columns')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="grid_rows" class="form-label">Grid Rows</label>
-                            <input type="number" class="form-control @error('grid_rows') is-invalid @enderror" id="grid_rows" name="grid_rows" min="1" value="{{ old('grid_rows') }}" required>
-                            @error('grid_rows')
+                            <label for="grid_option" class="form-label">Grid Layout</label>
+                            <select class="form-control @error('grid_option') is-invalid @enderror" id="grid_option" name="grid_option" required>
+                                <option value="">Select Grid Layout</option>
+                                @foreach($gridOptions as $value => $label)
+                                    <option value="{{ $value }}" {{ old('grid_option') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @error('grid_option')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

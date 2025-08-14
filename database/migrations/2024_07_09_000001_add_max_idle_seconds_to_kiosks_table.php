@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         Schema::table('kiosks', function (Blueprint $table) {
-            $table->integer('max_idle_seconds')->nullable()->after('max_capture_seconds');
+            $table->integer('max_idle_seconds')->nullable()->after('activation_code');
         });
     }
     public function down(): void {

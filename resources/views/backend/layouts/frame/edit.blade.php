@@ -30,16 +30,14 @@
                             @endif
                         </div>
                         <div class="mb-3">
-                            <label for="grid_columns" class="form-label">Grid Columns</label>
-                            <input type="number" class="form-control @error('grid_columns') is-invalid @enderror" id="grid_columns" name="grid_columns" min="1" value="{{ old('grid_columns', $frame->grid_columns) }}" required>
-                            @error('grid_columns')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="grid_rows" class="form-label">Grid Rows</label>
-                            <input type="number" class="form-control @error('grid_rows') is-invalid @enderror" id="grid_rows" name="grid_rows" min="1" value="{{ old('grid_rows', $frame->grid_rows) }}" required>
-                            @error('grid_rows')
+                            <label for="grid_option" class="form-label">Grid Layout</label>
+                            <select class="form-control @error('grid_option') is-invalid @enderror" id="grid_option" name="grid_option" required>
+                                <option value="">Select Grid Layout</option>
+                                @foreach($gridOptions as $value => $label)
+                                    <option value="{{ $value }}" {{ old('grid_option', $selectedGrid) == $value ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @error('grid_option')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -55,7 +53,7 @@
                             <select class="form-select @error('kiosk_ids') is-invalid @enderror" id="kiosk_ids" name="kiosk_ids[]" multiple required>
                                 <option value="all" {{ count($selectedKiosks) === $kiosks->count() ? 'selected' : '' }}>All Kiosks</option>
                                 @foreach($kiosks as $kiosk)
-                                    <option value="{{ $kiosk->id }}" {{ in_array($kiosk->id, $selectedKiosks) ? 'selected' : '' }}>{{ $kiosk->name }} ({{ $kiosk->device_id }})</option>
+                                    <option value="{{ $kiosk->id }}" {{ in_array($kiosk->id, old('kiosk_ids', $selectedKiosks)) ? 'selected' : '' }}>{{ $kiosk->name }} ({{ $kiosk->device_id }})</option>
                                 @endforeach
                             </select>
                             <small class="text-muted">Hold Ctrl (Windows) or Command (Mac) to select multiple kiosks.</small>

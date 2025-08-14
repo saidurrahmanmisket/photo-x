@@ -16,14 +16,21 @@ class EffectController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $effects = Effect::with('frame')->select('effects.*');
+            $effects = Effect::with('frames')->select('effects.*');
             return datatables()->of($effects)
                 ->addIndexColumn()
                 ->addColumn('image', function ($row) {
                     return $row->image ? '<img src="' . asset($row->image) . '" style="max-width:60px;">' : '-';
                 })
                 ->addColumn('frame', function ($row) {
-                    return $row->frame ? $row->frame->name : '-';
+                    if ($row->frames->count() > 0) {
+                        if ($row->frames->count() === Frame::count()) {
+                            return 'All Frames';
+                        } else {
+                            return $row->frames->pluck('name')->implode(', ');
+                        }
+                    }
+                    return '-';
                 })
                 ->addColumn('action', function ($row) {
                     $editUrl = route('admin.effects.edit', $row->id);
@@ -62,7 +69,11 @@ class EffectController extends Controller
             'name' => $request->name,
             'image' => $imagePath,
         ]);
-        $effect->frames()->sync($request->input('frame_ids', []));
+        $frameIds = $request->input('frame_ids', []);
+        if (in_array('all', $frameIds)) {
+            $frameIds = \App\Models\Frame::pluck('id')->toArray();
+        }
+        $effect->frames()->sync($frameIds);
         return redirect()->route('admin.effects.index')->with('t-success', 'Effect created successfully.');
     }
 
@@ -105,7 +116,11 @@ class EffectController extends Controller
             $data['image'] = uploadImage($request->file('image'), 'effects');
         }
         $effect->update($data);
-        $effect->frames()->sync($request->input('frame_ids', []));
+        $frameIds = $request->input('frame_ids', []);
+        if (in_array('all', $frameIds)) {
+            $frameIds = \App\Models\Frame::pluck('id')->toArray();
+        }
+        $effect->frames()->sync($frameIds);
         return redirect()->route('admin.effects.index')->with('t-success', 'Effect updated successfully.');
     }
 

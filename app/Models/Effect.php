@@ -21,4 +21,9 @@ class Effect extends Model
     {
         return $this->hasMany(Photo::class);
     }
+
+    public function frames()
+    {
+        return $this->belongsToMany(Frame::class, 'effect_frame');
+    }
 }
